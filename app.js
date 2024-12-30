@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // Adicionado
 
 const taskRoutes = require('./routes/tasks');
 const sectionRoutes = require('./routes/sections');
@@ -10,6 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+app.use(cors()); // Adicionado
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

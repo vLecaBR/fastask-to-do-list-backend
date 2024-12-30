@@ -1,35 +1,29 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const router = express.Router();
-const dbPath = process.env.DB_PATH;
 
-// Conexão com o banco de dados
-const db = new sqlite3.Database(dbPath);
+let sections = ['Hoje', 'Próximos 7 dias', 'Completas', 'Lixeira'];
 
-// Listar todas as seções
+// Obter todas as seções
 router.get('/', (req, res) => {
-  db.all(`SELECT * FROM sections`, (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
-  });
+  res.json(sections);
 });
 
-// Criar uma nova seção
+// Adicionar nova seção
 router.post('/', (req, res) => {
   const { name } = req.body;
-  db.run(`INSERT INTO sections (name) VALUES (?)`, [name], function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ id: this.lastID, name });
-  });
+  if (!sections.includes(name)) {
+    sections.push(name);
+    res.status(201).json({ message: 'Section added', name });
+  } else {
+    res.status(400).json({ error: 'Section already exists' });
+  }
 });
 
-// Deletar seção
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  db.run(`DELETE FROM sections WHERE id = ?`, [id], function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ message: 'Seção removida com sucesso!' });
-  });
+// Remover seção
+router.delete('/:name', (req, res) => {
+  const { name } = req.params;
+  sections = sections.filter((section) => section !== name);
+  res.status(204).send();
 });
 
 module.exports = router;
