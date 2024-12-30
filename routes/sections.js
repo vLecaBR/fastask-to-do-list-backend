@@ -1,3 +1,4 @@
+//sections.js
 const express = require('express');
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.delete('/:name', (req, res) => {
   sections = sections.filter((section) => section !== name);
   res.status(204).send();
 });
+
 
 module.exports = router;
