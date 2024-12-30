@@ -4,9 +4,10 @@ const router = express.Router();
 
 let tasks = []; // Lista simples para armazenar tarefas em memória
 
-// Obter todas as tarefas
 router.get('/', (req, res) => {
-  res.json(tasks);
+  const { section } = req.query;
+  const tasksInSection = tasks.filter(task => task.section === section);  // Filtro pela seção
+  res.json(tasksInSection);
 });
 
 // Adicionar nova tarefa
