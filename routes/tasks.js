@@ -22,15 +22,23 @@ router.post('/', (req, res) => {
 // Atualizar tarefa
 router.put('/:id', (req, res) => {
   const { id } = req.params;
-  const { completed } = req.body;
+  const { completed, section } = req.body;
   const task = tasks.find((t) => t.id == id);
+
   if (task) {
-    task.completed = completed;
-    res.json(task);
+    if (completed !== undefined) {
+      task.completed = completed; // Atualiza o status da tarefa
+    }
+    if (section) {
+      task.section = section; // Atualiza a seção, se for passado
+    }
+    res.json(task); // Retorna a tarefa atualizada para confirmar
   } else {
     res.status(404).json({ error: 'Task not found' });
   }
 });
+
+
 
 // Deletar tarefa
 router.delete('/:id', (req, res) => {
